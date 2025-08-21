@@ -3,6 +3,8 @@ import { usePosts } from "../../hooks/use-posts";
 import type { User } from "../../types";
 import PostList from "./post-list";
 import { LoadingState } from "../common/loading-state";
+import PostSearch from "./post-search";
+import ErrorState from "../common/error-state";
 
 interface PostsPanelProps {
   user: User;
@@ -19,6 +21,11 @@ export default function PostsPanel({ user }: PostsPanelProps) {
     setSkip(0);
   }, [query, order]);
 
+  useEffect(() => {
+    setQuery("");
+    setSkip(0);
+  }, [user]);
+
   const { posts, loading, error } = usePosts({
     userId: user.id,
     skip,
@@ -33,52 +40,17 @@ export default function PostsPanel({ user }: PostsPanelProps) {
       aria-busy={loading || undefined}
       className="relative flex h-full flex-col space-y-3  "
     >
-      {/* Controls */}
-      <div className="rounded-xl bg-white p-4   ">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="flex-1 flex gap-2">
-            <label htmlFor="search" className="sr-only">
-              Search posts
-            </label>
-            <input
-              id="search"
-              className="w-full md:max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:focus-ring"
-              placeholder="Search title or body..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <label htmlFor="sort" className="sr-only">
-              Sort
-            </label>
-            <select
-              id="sort"
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:focus-ring"
-              value={order}
-              onChange={(e) => setOrder(e.target.value as "asc" | "desc")}
-            >
-              <option value="asc">Title A → Z</option>
-              <option value="desc">Title Z → A</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <PostSearch
+        query={query}
+        order={order}
+        onQueryChange={setQuery}
+        onOrderChange={setOrder}
+      />
 
       {loading && <LoadingState title="Posts" />}
-      {error && (
-        <p className="text-sm text-red-600" role="alert">
-          {error.message}
-        </p>
-      )}
+      {error && <ErrorState title={error.message} />}
+      {!loading && <PostList posts={posts} />}
 
-      <PostList posts={posts} />
-
-      {/* {!loading && posts.length === 0 && !error && (
-          <li className="text-sm text-gray-600 px-2 py-4">No posts found.</li>
-        )} */}
-
-      {/* Pagination */}
       <nav
         aria-label="Pagination"
         className="mt-auto flex items-center justify-center gap-2"

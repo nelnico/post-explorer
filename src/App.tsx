@@ -3,6 +3,7 @@ import UserList from "./components/user-list";
 import PostsPanel from "./components/post/posts-panel";
 import type { User } from "./types";
 import { EmptyState } from "./components/common/empty-state";
+import Header from "./components/common/header";
 
 export default function App() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -13,14 +14,7 @@ export default function App() {
 
       <main className="p-4">
         <div className="max-w-4xl mx-auto">
-          <header className="mb-4">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Posts Explorer
-            </h1>
-            <p className="text-sm text-gray-600">
-              Select a user from the left to view their posts.
-            </p>
-          </header>
+          <Header />
 
           {selectedUser ? (
             <PostsPanel user={selectedUser} />
