@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-
-type User = { id: number; name: string };
+import type { User } from "../types";
 
 export default function UserList({
   onSelectUser,
-  selectedUserId,
+  selectedUser,
 }: {
-  onSelectUser: (id: number) => void;
-  selectedUserId: number | null;
+  onSelectUser: (user: User) => void;
+  selectedUser: User | null;
 }) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,11 +46,11 @@ export default function UserList({
       )}
       <ul className="space-y-1">
         {users.map((u) => {
-          const active = selectedUserId === u.id;
+          const active = selectedUser?.id === u.id;
           return (
             <li key={u.id}>
               <button
-                onClick={() => onSelectUser(u.id)}
+                onClick={() => onSelectUser(u)}
                 className={`w-full text-left px-3 py-2 rounded-lg transition
                   ${
                     active ? "bg-indigo-50 text-indigo-700" : "hover:bg-gray-50"
