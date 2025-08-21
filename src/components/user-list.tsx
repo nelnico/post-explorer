@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { User } from "../types";
+import { LoadingState } from "./common/loading-state";
 
 export default function UserList({
   onSelectUser,
@@ -20,7 +21,8 @@ export default function UserList({
           "https://jsonplaceholder.typicode.com/users"
         );
         if (!result.ok) throw new Error("Failed to load users");
-        setUsers(await result.json());
+        const data = await result.json();
+        setUsers(data);
       } catch (e: unknown) {
         if (e instanceof Error) {
           setError(e.message);
@@ -38,8 +40,8 @@ export default function UserList({
       <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700 mb-3">
         Users
       </h2>
-      {loading && <p className="text-sm text-gray-500">Loading users...</p>}
-      {error && (
+      {loading && <LoadingState title="Loading users" />}
+      {!loading && error && (
         <p role="alert" className="text-sm text-red-600">
           {error}
         </p>
@@ -53,9 +55,11 @@ export default function UserList({
                 onClick={() => onSelectUser(u)}
                 className={`w-full text-left px-3 py-2 rounded-lg transition
                   ${
-                    active ? "bg-indigo-50 text-indigo-700" : "hover:bg-gray-50"
+                    active
+                      ? "bg-indigo-50 text-indigo-700"
+                      : "hover:bg-gray-100"
                   }
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 cursor-pointer`}
               >
                 {u.name}
               </button>

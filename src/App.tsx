@@ -1,6 +1,6 @@
 import { useState } from "react";
 import UserList from "./components/user-list";
-import PostsPanel from "./components/posts-panel";
+import PostsPanel from "./components/post/posts-panel";
 import type { User } from "./types";
 import { EmptyState } from "./components/common/empty-state";
 

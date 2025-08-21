@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { usePosts } from "../hooks/use-posts";
-import type { User } from "../types";
-import PostItem from "./post-item";
+import { usePosts } from "../../hooks/use-posts";
+import type { User } from "../../types";
+import PostList from "./post-list";
+import { LoadingState } from "../common/loading-state";
 
 interface PostsPanelProps {
   user: User;
@@ -64,27 +65,18 @@ export default function PostsPanel({ user }: PostsPanelProps) {
         </div>
       </div>
 
-      {/* Error */}
+      {loading && <LoadingState title="Posts" />}
       {error && (
         <p className="text-sm text-red-600" role="alert">
           {error.message}
         </p>
       )}
 
-      {/* List (always rendered so content doesn't jump) */}
-      <ul className="space-y-2">
-        {posts.map((post) => (
-          <li
-            key={post.id}
-            className="rounded-lg bg-white border border-gray-200"
-          >
-            <PostItem post={post} />
-          </li>
-        ))}
-        {!loading && posts.length === 0 && !error && (
+      <PostList posts={posts} />
+
+      {/* {!loading && posts.length === 0 && !error && (
           <li className="text-sm text-gray-600 px-2 py-4">No posts found.</li>
-        )}
-      </ul>
+        )} */}
 
       {/* Pagination */}
       <nav
